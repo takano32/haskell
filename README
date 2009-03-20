@@ -1,6 +1,10 @@
 jus Haskell勉強会のメモ
 
+== Ustream.tv
+当日のデスクトップをUstreamで中継予定です
+http://www.ustream.tv/channel/takano32
 
+== インストール
 Macの場合はghcとcabalをMacPortsからインストール
 > sudo port install ghc
 > sudo port install hs-cabal
