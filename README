@@ -1,5 +1,8 @@
 jus Haskell勉強会のメモ
 
 
+Macの場合はghcとcabalをMacPortsからインストール
+> sudo port install ghc
+> sudo port install hs-cabal
 
 
