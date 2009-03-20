@@ -3,6 +3,7 @@
 module Main where
 
 import Data.List
+import System.Cmd
 import System.Environment
 import System.IO
 import qualified System.IO.UTF8 as U
@@ -19,17 +20,31 @@ paragraphs = unfoldr phi
                      xsys       -> Just xsys
           hr l = "-----" `isPrefixOf` l
 
-main :: IO()
+main :: IO ()
 main = inputSetup 
-       >>= (>> pause) . outputParagraph . head . paragraphs . lines
+       >>= mapM_ displayParagraph . paragraphs . lines
 
 inputSetup :: IO String
 inputSetup = getArgs >>= U.readFile . head
 
-outputParagraph :: Paragraph -> IO()
-outputParagraph = U.putStr . unlines
+displayParagraph :: Paragraph -> IO ()
+displayParagraph = (pause >>) . (clear >>) . outputParagraph
 
-pause :: IO()
+outputParagraph :: Paragraph -> IO ()
+outputParagraph = mapM_ displayLine
+
+displayLine :: Line -> IO ()
+displayLine = (>> delay) . outputLine
+
+outputLine :: Line -> IO ()
+outputLine = U.putStrLn
+
+pause :: IO ()
 pause = timeout (-1) getChar >> return ()
 
+clear :: IO()
+clear = system "clear" >> return ()
+
+delay :: IO ()
+delay = timeout(10^5) getChar >> return ()
 
