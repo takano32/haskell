@@ -18,7 +18,7 @@ paragraphs = unfoldr phi
           hr l = "-----" `isPrefixOf` l
 
 main :: IO()
-main = inputSetup >>= outputParagraph . head paragraphs . lines
+main = inputSetup >>= outputParagraph . head . paragraphs . lines
 
 inputSetup :: IO String
 inputSetup = getArgs >>= U.readFile . head
