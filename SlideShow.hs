@@ -2,11 +2,13 @@
 
 module Main where
 
+import Codec.Binary.UTF8.String
 import Data.List
 import System.Cmd
 import System.Environment
 import System.IO
 import qualified System.IO.UTF8 as U
+import System.Posix
 import System.Timeout
 
 type Line      = String
@@ -21,8 +23,20 @@ paragraphs = unfoldr phi
           hr l = "-----" `isPrefixOf` l
 
 main :: IO ()
-main = inputSetup 
+main = initialize
+       >> inputSetup 
        >>= mapM_ displayParagraph . paragraphs . lines
+
+initialize :: IO ()
+initialize = hSetBuffering stdin NoBuffering
+             >> hSetBuffering stdout NoBuffering
+             >> stdinNoEcho
+
+stdinNoEcho :: IO ()
+stdinNoEcho
+    = getTerminalAttributes stdInput
+      >>= flip (setTerminalAttributes stdInput) Immediately
+              . flip withoutMode EnableEcho
 
 inputSetup :: IO String
 inputSetup = getArgs >>= U.readFile . head
@@ -34,10 +48,16 @@ outputParagraph :: Paragraph -> IO ()
 outputParagraph = mapM_ displayLine
 
 displayLine :: Line -> IO ()
-displayLine = (>> delay) . outputLine
+displayLine = (>> delay (10^5)) . (>> newline) . outputLine
 
 outputLine :: Line -> IO ()
-outputLine = U.putStrLn
+outputLine = mapM_ displayChar
+
+displayChar :: Char -> IO ()
+displayChar = (>> delay(10^4)) . outputChar
+
+outputChar :: Char -> IO ()
+outputChar = putStr . encodeString . (:[])
 
 pause :: IO ()
 pause = timeout (-1) getChar >> return ()
@@ -45,6 +65,10 @@ pause = timeout (-1) getChar >> return ()
 clear :: IO()
 clear = system "clear" >> return ()
 
-delay :: IO ()
-delay = timeout(10^5) getChar >> return ()
+delay :: Int -> IO ()
+delay iv = timeout iv getChar >> return ()
+
+newline :: IO()
+newline = putChar '\n'
+
 
