@@ -6,6 +6,7 @@ import Codec.Binary.UTF8.String
 import Data.List
 import System.Cmd
 import System.Environment
+import System.Exit
 import System.IO
 import qualified System.IO.UTF8 as U
 import System.Posix
@@ -60,7 +61,12 @@ outputChar :: Char -> IO ()
 outputChar = putStr . encodeString . (:[])
 
 pause :: IO ()
-pause = timeout (-1) getChar >> return ()
+pause = timeout (-1) getChar >>= selector
+
+selector :: Maybe Char -> IO()
+selector mc = case mc of
+                Just 'q' -> exitSuccess
+                _        -> return ()
 
 clear :: IO()
 clear = system "clear" >> return ()
