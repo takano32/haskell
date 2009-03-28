@@ -46,7 +46,22 @@ displayParagraph :: Paragraph -> IO ()
 displayParagraph = (pause >>) . (clear >>) . outputParagraph
 
 outputParagraph :: Paragraph -> IO ()
-outputParagraph = mapM_ displayLine
+outputParagraph = mapM_ (dispatchLine displayLine)
+
+
+dispatchLine :: (Line -> IO ()) -> Line -> IO ()
+dispatchLine dl l
+             | ":p" `isPrefixOf` l = pause
+             | ":c" `isPrefixOf` l = clear
+	     | "% " `isPrefixOf` l = putStr "% " >> pause >> dl (drop 2 l)
+	     | not (null prompt)   = putStr prompt >> pause >> dl rest
+	     | otherwise 	   = dl l
+    where (prompt, rest) = case break ('>' ==) l of
+	       	             (_, [])       -> ("", "")
+                             (xs,_:' ':ys) -> if ' ' `elem` xs then ("","")
+                                              else (xs++"> ", ys)
+                             _             -> ("", "")
+
 
 displayLine :: Line -> IO ()
 displayLine = (>> delay (10^5)) . (>> newline) . outputLine
