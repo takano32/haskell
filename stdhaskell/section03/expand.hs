@@ -4,8 +4,8 @@ main = do cs <- getContents
           putStr $ expand cs
 
 expand :: String -> String
-expand cs = map translate cs
+expand cs = concat $ map expandTab cs
 
-translate :: Char -> Char
-translate c = if c == '\t' then '@' else c
+expandTab :: Char -> String
+expandTab c = if c == '\t' then "        " else [c]
 
