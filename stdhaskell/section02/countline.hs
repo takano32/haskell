@@ -1,7 +1,7 @@
 
 
 main = do cs <- getContents
-          putStr cs
+          print $ length $ lines cs
 
 
 

@@ -5,6 +5,7 @@ Section 1.
 
 findAll list = filter match list
 
-
+Section 2.
+#ToDo: *.o, *.hi を ignore する
 
 
