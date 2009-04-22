@@ -1,1 +1,52 @@
-Introduction to Functional Programming Using Haskell
+-- Introduction to Functional Programming Using Haskell
+{-####
+ Hello World Program
+####-}
+
+-- print Hello World to terminal
+helloWorld::IO()
+helloWorld = putStr "Hello World!"
+
+helloWorldString :: String
+helloWorldString = "Hello World!"
+
+
+helloInteger :: Integer
+helloInteger = 1 + 2
+
+helloChar :: Char
+helloChar = 'a'
+
+
+-- length :: [a] -> Integer
+-- length [] = 0
+-- length (x:xs) = 1 + length xs
+
+quicksort [] = []
+quicksort (x:xs) = quicksort [y | y <- xs, y < x]
+                   ++ [x]
+                   ++ quicksort [y | y <- xs, y >= x]
+
+mytail :: [a] -> [a]
+mytail (x:xs) = xs
+
+
+myhead :: [a] -> a
+myhead (x:xs) = x
+
+twoFromHead :: [a] -> [a]
+twoFromHead (x:xs) = [x, head xs]
+
+
+
+headAndLast :: [a] -> [a]
+headAndLast (x:xs) = [x, last xs]
+
+add :: Integer -> Integer -> Integer
+add x y = x + y
+-- inc n = n + 1
+inc = add 1
+
+
+
+
