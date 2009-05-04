@@ -7,5 +7,6 @@ main = do args <- getArgs
           putStr $ unlines $ uniq $ sort $ lines cs
 
 uniq :: [String] -> [String]
-uniq s = s
+uniq ss = concat $ map (take 1) $ group ss
+
 
